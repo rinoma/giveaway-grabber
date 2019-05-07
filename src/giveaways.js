@@ -298,6 +298,14 @@ async function handleGiveawayResult(page) {
 				console.log('sending email');
 				await sgMail.send(msg);
 			}
+
+			try {
+				await page.waitForSelector('input[name="ShipMyPrize"]');
+				await page.click('input[name="ShipMyPrize"]');
+			} catch (error) {
+				console.log('Tried to click confirm address, but failed. Re-visit page to claim prize!');
+			}
+
 		}
 		return true;
 	} catch (error) {
@@ -447,7 +455,7 @@ async function enterGiveaways(page, pageNumber) {
 			`//ul[@class="listing-info-container"]/li[${i}]//a/div[2]/div[2]/span[contains(text(), "Watch a short video")]`
 		);
 
-		if (noEntryRequired.length > 0 || videoRequired.length > 0) {
+		if (noEntryRequired.length > 0) {
 			try {
 				await navigateToGiveaway(page, i);
 			} catch (error) {
